@@ -1,15 +1,22 @@
 [project]
 name = "mov"
 version = "0.1.0"
-description = "Default template for PDM package"
+description = "영화진흥위원회 영화순위 데이터 처리"
 authors = [
     {name = "Jeonghoon2", email = "ukidd12@naver.com"},
 ]
 dependencies = []
-requires-python = "==3.11.*"
+requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
 
 
 [tool.pdm]
 distribution = false
+
+[project.scripts]
+mov-ping = 'mov.cli:hello'
+
+[project.urls]
+Homepage = "https://github.com/Jeonghoon2/movie"
+Issue = "https://github.com/Jeonghoon2/movie/issues"
