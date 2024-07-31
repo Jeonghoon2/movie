@@ -35,6 +35,7 @@ def save2df(load_dt='20120101', url_params={}):
     ]
 
     for k, v in url_params.items():
+        df[k] = v
         partition.append(k)
 
     df.to_parquet('~/tmp/test_parquet', partition_cols=partition)
