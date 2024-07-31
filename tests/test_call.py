@@ -1,5 +1,9 @@
-from src.mov.api.call import gen_url, req, get_key, req2list, list2df, save2df
+from src.mov.api.call import gen_url, req, get_key, req2list, list2df, save2df, apply_type2df
 import pandas as pd
+
+def test_apply_type2df():
+    df = apply_type2df()
+    assert isinstance(df, pd.DataFrame)
 
 def test_save2df():
 	df = save2df()
