@@ -1,14 +1,65 @@
-from src.mov.api.call import gen_url, req, get_key, req2list, list2df, save2df, apply_type2df
+from src.mov.api.call import gen_url, req, get_key, req2list, list2df, save2df, apply_type2df, get_url_params
 import pandas as pd
+
+
+def test_gen_url_path():
+    multiMovieY = {
+        "multiMovieYn": "Y"
+    }
+    multiMovieN = {
+        "multiMovieYn": "N"
+    }
+
+    urlA = gen_url(url_params=multiMovieY)
+    urlB = gen_url(url_params=multiMovieN)
+
+
+    # URL GEN TEST
+    assert "multiMovieYn=Y" in urlA
+    assert "multiMovieYn=N" in urlB
+
+    # Param 별 데이터 검증¬
+    _, dataA = req(20120101, url_params=multiMovieY)
+    movieListA = dataA["boxOfficeResult"]["dailyBoxOfficeList"]
+    assert "진짜로 일어날지도 몰라 기적" == movieListA[0]["movieNm"]
+
+    _, dataB = req(20120101, url_params=multiMovieN)
+    movieListB = dataB["boxOfficeResult"]["dailyBoxOfficeList"]
+    assert "미션임파서블:고스트프로토콜" == movieListB[0]["movieNm"]
+
+
+def test_url_params():
+    url_params = {
+        "testA": "1",
+        "testB": "2"
+    }
+
+    params = get_url_params(url_params)
+
+    for p in params:
+        assert p in url_params
+
 
 def test_apply_type2df():
     df = apply_type2df()
     assert isinstance(df, pd.DataFrame)
+    assert str(df['rnum'].dtype) in ['int64']
+    assert str(df['rank'].dtype) in ['int64']
+    assert str(df['audiInten'].dtype) in ['int64']
+
+    num_cols = ['rnum', 'rank', 'rankInten', 'salesAmt', 'audiCnt',
+                'audiAcc', 'scrnCnt', 'showCnt', 'salesShare', 'salesInten',
+                'salesChange', 'audiInten', 'audiChange']
+
+    for c in num_cols:
+        assert df[c].dtype in ['int64', 'float64']
+
 
 def test_save2df():
-	df = save2df()
-	assert isinstance(df, pd.DataFrame)
-	assert 'load_dt' in df.columns
+    df = save2df()
+    assert isinstance(df, pd.DataFrame)
+    assert 'load_dt' in df.columns
+    assert len(df) == 10
 
 
 def test_list2df():
@@ -19,12 +70,14 @@ def test_list2df():
     assert 'movieNm' in df.columns
     assert 'audiAcc' in df.columns
 
+
 def test_req2list():
     l = req2list()
     assert len(l) > 0
     v = l[0]
     assert 'rnum' in v.keys()
     assert v['rnum'] == '1'
+
 
 def test_비밀키숨기기():
     key = get_key()
@@ -36,10 +89,13 @@ def test_유알엘테스트():
     assert "http" in url
     assert "kobis" in url
 
+    d = {"multiMovieYn": "N"}
+    url = gen_url(url_params=d)
+
+
 def test_req():
     code, data = req()
     assert code == 200
 
     code, data = req('20230101')
     assert code == 200
-
