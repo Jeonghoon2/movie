@@ -24,7 +24,6 @@ def apply_type2df(load_dt="20120101", path="~/tmp/test_parquet"):
 
 
 def save2df(load_dt='20120101', url_params={}):
-
     df = list2df(load_dt, url_params)
 
     # df 에 load_dt 컬럼 추가 (조회 일자 YYYYMMDD 형식 으로)
