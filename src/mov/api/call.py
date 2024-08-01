@@ -11,8 +11,9 @@ def echo(yaho):
     return yaho
 
 
-def apply_type2df(load_dt="20120101", path="~/tmp/test_parquet"):
-    df = pd.read_parquet(f'{path}/load_dt={load_dt}')
+def apply_type2df(load_dt="20120101", path="~/tmp/test_parquet", df=None):
+    if df is None:
+        df = pd.read_parquet(f'{path}/load_dt={load_dt}')
 
     num_cols = ['rnum', 'rank', 'rankInten', 'salesAmt', 'audiCnt',
                 'audiAcc', 'scrnCnt', 'showCnt', 'salesShare', 'salesInten',
@@ -23,14 +24,13 @@ def apply_type2df(load_dt="20120101", path="~/tmp/test_parquet"):
     return df
 
 
-def save2df(load_dt='20120101', url_params={}):
-    df = list2df(load_dt, url_params)
+def save2df(load_dt='20120101', url_params={}, df=None):
+    # 외부에서 입력 받는 DF가 없다면 날짜와 URL Param으로 데이터를 추출
+    if df is None:
+        df = list2df(load_dt, url_params)
 
-    # df 에 load_dt 컬럼 추가 (조회 일자 YYYYMMDD 형식 으로)
-    # 아래 파일 저장시 load_dt 기준 으로 파티셔닝
     df['load_dt'] = load_dt
 
-    # Partitioning List
     partitions = [
         'load_dt'
     ]
